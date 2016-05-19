@@ -1,0 +1,57 @@
+!!! 5
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}
+      %meta{:content => "IE=Edge,chrome=1", "http-equiv" => "X-UA-Compatible"}
+        %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}
+          %title= content_for?(:title) ? yield(:title) : "Raddit" 
+          = csrf_meta_tags
+          = stylesheet_link_tag "application", :media => "all"
+          / For third-generation iPad with high-resolution Retina display:
+          / Size should be 144 x 144 pixels
+          = favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
+          / For iPhone with high-resolution Retina display:
+          / Size should be 114 x 114 pixels
+          = favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
+          / For first- and second-generation iPad:
+          / Size should be 72 x 72 pixels
+          = favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
+          / For non-Retina iPhone, iPod Touch, and Android 2.1+ devices:
+          / Size should be 57 x 57 pixels
+          = favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
+          / For all other devices
+          / Size should be 32 x 32 pixels
+          = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
+          = javascript_include_tag "application"
+          / Le HTML5 shim, for IE6-8 support of HTML elements
+          /[if lt IE 9]
+            <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js" type="text/javascript"></script>
+/ Static navbar
+%body
+  %nav.navbar.navbar-default.navbar-static-top
+    .col-md-8.col-md-offset-2
+      .navbar-header
+        %button.navbar-toggle.collapsed{"aria-controls" => "navbar", "aria-expanded" => "false", "data-target" => "#navbar", "data-toggle" => "collapse", :type => "button"}
+          %span.sr-only Toggle navigation
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
+        #logo.navbar-brand= link_to "Raddit", root_path
+        %span
+          #beta.navbar-brand 2.0
+      #navbar.navbar-collapse.collapse
+        %ul.nav.navbar-nav.navbar-right
+          - if user_signed_in?
+            %ul.nav.navbar-nav.navbar-right
+              %li= link_to 'Submit link', new_link_path
+              %li= link_to 'Account', edit_user_registration_path
+              %li= link_to 'Sign out', destroy_user_session_path, :method => :delete
+          - else
+            %ul.nav.navbar-nav.pull-right
+              %li= link_to 'Sign up', new_user_registration_path
+              %li= link_to 'Sign in', new_user_session_path
+  .col-md-6.col-md-offset-3.col-xs-12
+    #main_content
+      - flash.each do |name, msg|
+        = content_tag(:div, msg, class: "alert alert-info")
+      =yield 

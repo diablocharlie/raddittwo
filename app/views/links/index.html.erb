@@ -2,11 +2,13 @@
   <div class="link row clearfix">
     <h2>
       <%= link_to link.title, link %><br>
-      <small class="author">Submitted <%= time_ago_in_words(link.created_at) %> by <%= link.user.name %></small>
+      <small class="author">Submitted <%= time_ago_in_words(link.created_at) %> by <%= link_to link.user.name , user_path(link.user)%></small>
     </h2>
 
     <div class="btn-group">
-      <a class="btn btn-default btn-sm" href="<%= link.url %>">Visit Link</a>
+      <span class="btn btn-default btn-sm"> 
+      <%= link_to "Visit Link", url_with_protocol(link.url) %>
+        </span> 
       <%= link_to like_link_path(link), method: :put, class: "btn btn-default btn-sm" do %>
         <span class="glyphicon glyphicon-chevron-up"></span>
         Upvote
@@ -14,9 +16,9 @@
       <% end %>
       <%= link_to dislike_link_path(link), method: :put, class: "btn btn-default btn-sm" do %>
         <span class="glyphicon glyphicon-chevron-down">
-        Downvote
-        <%= link.get_downvotes.size %>
-      <% end %>
+          Downvote
+          <%= link.get_downvotes.size %>
+        <% end %>
     </div>
   </div>
 <% end %>

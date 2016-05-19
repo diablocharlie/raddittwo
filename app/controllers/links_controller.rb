@@ -1,12 +1,12 @@
 class LinksController < ApplicationController
-  before_action :set_link, only: [:show, :edit, :update, :destroy]
+  before_action :set_link, only: [:show, :edit, :update, :destroy, :upvote]
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :authorized_user, only: [:edit, :update, :destroy]
+  before_action :require_same_user, only: [:edit, :update, :destroy]
 
   # GET /links
   # GET /links.json
   def index
-    @links = Link.all
+    @links = Link.all.order("created_at DESC")
   end
 
   # GET /links/1
@@ -64,13 +64,13 @@ class LinksController < ApplicationController
   end
 
   def upvote
-    @link = Link.find(params[:id])
+    @link = Link.friendly.find(params[:id])
     @link.upvote_by current_user
     redirect_to :back
   end
 
   def downvote
-    @link = Link.find(params[:id])
+    @link = Link.friendly.find(params[:id])
     @link.downvote_from current_user
     redirect_to :back
   end
@@ -78,13 +78,15 @@ class LinksController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_link
-      @link = Link.find(params[:id])
+      @link = Link.friendly.find(params[:id])
     end
 
-    def authorized_user
-      @link = current_user.links.find_by(id: params[:id])
-      redirect_to links_path, notice: "Not authorized to edit this link" if @link.nil?
-    end
+    def require_same_user
+      if current_user != @link.user
+        flash[:danger] = "Not authorized to edit this link"
+        redirect_to root_path
+      end
+    end 
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def link_params

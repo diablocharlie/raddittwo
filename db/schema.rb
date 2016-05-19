@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160518212051) do
+ActiveRecord::Schema.define(version: 20160519034538) do
 
   create_table "comments", force: true do |t|
     t.integer  "link_id"
@@ -63,10 +63,12 @@ ActiveRecord::Schema.define(version: 20160518212051) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.string   "slug"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["slug"], name: "index_users_on_slug", unique: true
 
   create_table "votes", force: true do |t|
     t.integer  "votable_id"

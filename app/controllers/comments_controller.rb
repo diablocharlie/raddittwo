@@ -3,7 +3,7 @@ class CommentsController < ApplicationController
   before_filter :authenticate_user!
 
   def create
-    @link = Link.find(params[:link_id])
+    @link = Link.friendly.find(params[:link_id])
     @comment = @link.comments.new(comment_params)
     @comment.user = current_user
 

@@ -4,4 +4,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   has_many :links
+
+  extend FriendlyId
+    friendly_id :name, use: :slugged
 end
